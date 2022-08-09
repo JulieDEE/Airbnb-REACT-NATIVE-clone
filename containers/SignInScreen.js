@@ -12,24 +12,40 @@ import Constants from "expo-constants";
 import logo from "../assets/logo.png";
 import { useState } from "react";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
-
+import { AntDesign } from "@expo/vector-icons";
+import { Entypo } from "@expo/vector-icons";
 
 export default function SignInScreen({ setToken }) {
   const navigation = useNavigation();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [error, setError] = useState(false);
+  const [passwordVisible, setPasswordVisible] = useState(false);
 
   const handleSubmit = async () => {
-    const response = await axios.post(
-      "https://express-airbnb-api.herokuapp.com/user/log_in",
-      {
-        email,
-        password,
+    try {
+      if (email && password) {
+        const response = await axios.post(
+          "https://express-airbnb-api.herokuapp.com/user/log_in",
+          {
+            email,
+            password,
+          }
+        );
+        const userToken = "secret-token";
+        setToken(userToken);
+        alert("connexion reussi");
+      } else {
+        alert("Tous les champs ne sont pas remplis");
       }
-    );
-    const userToken = "secret-token";
-    setToken(userToken);
-    alert("connexion reussi")
+    } catch (error) {
+      console.log(error.message);
+      setError(true);
+    }
+  };
+
+  const handleVisible = () => {
+    setPasswordVisible(!passwordVisible);
   };
 
   return (
@@ -45,18 +61,40 @@ export default function SignInScreen({ setToken }) {
           <TextInput
             style={styles.input}
             placeholder="email"
+            placeholderTextColor="#777777"
             onChangeText={(text) => {
               setEmail(text);
             }}
           />
-          <TextInput
-            style={styles.input}
-            placeholder="password"
-            secureTextEntry={true}
-            onChangeText={(text) => {
-              setPassword(text);
-            }}
-          />
+          <View>
+            <TextInput
+              style={styles.inputPassword}
+              placeholder="password"
+              placeholderTextColor="#777777"
+              secureTextEntry={passwordVisible ? false : true}
+              onChangeText={(text) => {
+                setPassword(text);
+              }}
+            />
+            <TouchableOpacity onPress={handleVisible} style={styles.eyeButton}>
+              {passwordVisible ? (
+                <Entypo name="eye" size={24} color="black" />
+              ) : (
+                <Entypo name="eye-with-line" size={24} color="black" />
+              )}
+            </TouchableOpacity>
+          </View>
+
+          {error && (
+            <View style={{ flexDirection: "row", marginTop: 10 }}>
+              <AntDesign name="exclamationcircle" size={20} color="red" />
+
+              <Text style={{ color: "red", marginLeft: 10 }}>
+                Incorrect password or email
+              </Text>
+            </View>
+          )}
+
           <TouchableOpacity onPress={handleSubmit} style={styles.signInButton}>
             <Text style={styles.buttonText}>Sign in</Text>
           </TouchableOpacity>
@@ -98,6 +136,30 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     height: 60,
     fontSize: 16,
+  },
+
+  inputPassword: {
+    borderBottomColor: "#EB5A62",
+    borderBottomWidth: 1,
+    height: 60,
+    fontSize: 16,
+    position: "relative",
+  },
+
+  eye: {
+    position: "absolute",
+    top: 15,
+    right: 0,
+    zIndex: 1,
+  },
+
+  eyeButton: {
+    position: "absolute",
+    top: 15,
+    right: 0,
+    zIndex: 1,
+    height: 40,
+    width: 40,
   },
 
   signInButton: {

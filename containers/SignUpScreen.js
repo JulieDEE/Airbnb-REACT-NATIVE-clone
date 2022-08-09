@@ -13,6 +13,7 @@ import logo from "../assets/logo.png";
 import { useState } from "react";
 import axios from "axios";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+import { Entypo } from "@expo/vector-icons";
 
 export default function SignUpScreen({ setToken }) {
   const navigation = useNavigation();
@@ -24,27 +25,41 @@ export default function SignUpScreen({ setToken }) {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [description, setDescription] = useState("");
   const [username, setUsername] = useState("");
+  const [passwordVisible, setPasswordVisible] = useState(false);
+  const [confirmpasswordVisible, setConfirmPasswordVisible] = useState(false);
 
   // ON SUBMIT :
 
   const handleSubmit = async () => {
     try {
-      const response = await axios.post(
-        "https://express-airbnb-api.herokuapp.com/user/sign_up",
-        {
-          email,
-          username,
-          description,
-          password,
-        }
-      );
+      if (email && password && confirmPassword && description && username) {
+        const response = await axios.post(
+          "https://express-airbnb-api.herokuapp.com/user/sign_up",
+          {
+            email,
+            username,
+            description,
+            password,
+          }
+        );
 
-      const userToken = "secret-token";
-      setToken(userToken);
-      alert("Creation de compte reussie");
+        const userToken = "secret-token";
+        setToken(userToken);
+        alert("Creation de compte reussie");
+      } else {
+        alert("tous les champs ne sont pas remplis !");
+      }
     } catch (error) {
-      console.log(error);
+      console.log(error.message);
     }
+  };
+
+  const handleVisible = () => {
+    setPasswordVisible(!passwordVisible);
+  };
+
+  const handleVisibleConfirm = () => {
+    setConfirmPasswordVisible(!confirmpasswordVisible);
   };
 
   return (
@@ -60,42 +75,75 @@ export default function SignUpScreen({ setToken }) {
           <TextInput
             style={styles.input}
             placeholder="email"
+            placeholderTextColor="#777777"
             onChangeText={(text) => {
               setEmail(text);
             }}
+            value={email}
           />
           <TextInput
             style={styles.input}
             placeholder="username"
+            placeholderTextColor="#777777"
             onChangeText={(text) => {
               setUsername(text);
             }}
+            value={username}
           />
           <TextInput
             multiline
             numberOfLines={5}
             placeholder="Describe yourself in a few words..."
+            placeholderTextColor="#777777"
             style={styles.textarea}
             onChangeText={(text) => {
               setDescription(text);
             }}
+            value={description}
           />
-          <TextInput
-            style={styles.input}
-            placeholder="password"
-            secureTextEntry={true}
-            onChangeText={(text) => {
-              setPassword(text);
-            }}
-          />
-          <TextInput
-            style={styles.input}
-            placeholder="confirm password"
-            secureTextEntry={true}
-            onChangeText={(text) => {
-              setConfirmPassword(text);
-            }}
-          />
+          <View>
+            <TextInput
+              style={styles.input}
+              placeholder="password"
+              placeholderTextColor="#777777"
+              secureTextEntry={passwordVisible ? false : true}
+              onChangeText={(text) => {
+                setPassword(text);
+              }}
+              value={password}
+            />
+            <TouchableOpacity onPress={handleVisible} style={styles.eyeButton}>
+              {passwordVisible ? (
+                <Entypo name="eye" size={24} color="black" />
+              ) : (
+                <Entypo name="eye-with-line" size={24} color="black" />
+              )}
+            </TouchableOpacity>
+          </View>
+
+          <View>
+            <TextInput
+              style={styles.input}
+              placeholder="confirm password"
+              placeholderTextColor="#777777"
+              secureTextEntry={confirmpasswordVisible ? false : true}
+              onChangeText={(text) => {
+                setConfirmPassword(text);
+              }}
+              value={confirmPassword}
+            />
+            <TouchableOpacity
+              onPress={handleVisibleConfirm}
+              style={styles.eyeButton}
+            >
+              {confirmpasswordVisible ? (
+                <Entypo name="eye" size={24} color="black" />
+              ) : (
+                <Entypo name="eye-with-line" size={24} color="black" />
+              )}
+            </TouchableOpacity>
+          </View>
+
           <TouchableOpacity onPress={handleSubmit} style={styles.signUpButton}>
             <Text style={styles.buttonText}>Sign up</Text>
           </TouchableOpacity>
@@ -147,6 +195,22 @@ const styles = StyleSheet.create({
     height: 100,
     marginTop: 35,
     padding: 10,
+  },
+
+  eye: {
+    position: "absolute",
+    top: 15,
+    right: 0,
+    zIndex: 1,
+  },
+
+  eyeButton: {
+    position: "absolute",
+    top: 15,
+    right: 0,
+    zIndex: 1,
+    height: 40,
+    width: 40,
   },
 
   signUpButton: {

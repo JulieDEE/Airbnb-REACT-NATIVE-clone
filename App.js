@@ -11,6 +11,7 @@ import SignUpScreen from "./containers/SignUpScreen";
 import SettingsScreen from "./containers/SettingsScreen";
 import SplashScreen from "./containers/SplashScreen";
 
+
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
 
