@@ -1,6 +1,7 @@
 import { useNavigation } from "@react-navigation/core";
 import MapView from "react-native-maps";
 import * as Location from "expo-location";
+import { SwiperFlatList } from "react-native-swiper-flatlist";
 import {
   Text,
   View,
@@ -59,7 +60,6 @@ export default function RoomScreen(props) {
     getPermission();
   }, []);
 
-
   const rating = (number) => {
     const tab = [];
 
@@ -86,7 +86,7 @@ export default function RoomScreen(props) {
           <View style={styles.header}>
             <TouchableOpacity
               style={{ width: "47%" }}
-              onPress={() => navigation.navigate("Home")}
+              onPress={() => navigation.goBack()}
             >
               <ArrowBack />
             </TouchableOpacity>

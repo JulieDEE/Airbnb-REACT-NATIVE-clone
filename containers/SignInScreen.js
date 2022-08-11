@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   StyleSheet,
   Image,
+  Platform
 } from "react-native";
 import Constants from "expo-constants";
 import logo from "../assets/logo.png";
@@ -14,6 +15,7 @@ import { useState } from "react";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { AntDesign } from "@expo/vector-icons";
 import { Entypo } from "@expo/vector-icons";
+
 
 export default function SignInScreen({ setToken }) {
   const navigation = useNavigation();
@@ -36,7 +38,6 @@ export default function SignInScreen({ setToken }) {
         // ASYNCSTORAGE TOKEN :
         setToken(response.data.token);
 
-        alert("connexion reussi");
       } else {
         alert("Tous les champs ne sont pas remplis");
       }
@@ -49,6 +50,7 @@ export default function SignInScreen({ setToken }) {
   const handleVisible = () => {
     setPasswordVisible(!passwordVisible);
   };
+
 
   return (
     <KeyboardAwareScrollView>

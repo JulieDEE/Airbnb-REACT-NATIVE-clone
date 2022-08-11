@@ -1,14 +1,25 @@
-import { Text, View, StyleSheet, Image } from "react-native";
+import {
+  Text,
+  View,
+  StyleSheet,
+  Image,
+  Platform,
+  TouchableOpacity,
+} from "react-native";
 import axios from "axios";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import Constants from "expo-constants";
 import logo from "../assets/logo.png";
 import MapView, { PROVIDER_GOOGLE } from "react-native-maps";
 import * as Location from "expo-location";
+import LottieView from "lottie-react-native";
+import { useNavigation } from "@react-navigation/core";
 
 export default function AroundMe() {
   const [data, setData] = useState();
   const [isLoading, setIsLoading] = useState(true);
+  const animation = useRef(null);
+  const navigation = useNavigation();
 
   useEffect(() => {
     const getPermission = async () => {
@@ -36,7 +47,19 @@ export default function AroundMe() {
   }, []);
 
   return isLoading ? (
-    <Text>En chargement</Text>
+    <View style={styles.animationContainer}>
+      <LottieView
+        autoPlay
+        ref={animation}
+        style={{
+          width: 200,
+          height: 200,
+          backgroundColor: "white",
+        }}
+        source={require("../assets/lottie.json")}
+      />
+      <Text>Chargement ...</Text>
+    </View>
   ) : (
     <>
       <View style={styles.header}>
@@ -54,6 +77,7 @@ export default function AroundMe() {
           longitudeDelta: 0.2,
         }}
         style={styles.mapView}
+        provider={Platform.OS === "Android" ? PROVIDER_GOOGLE : null}
       >
         {data.map((elem, index) => {
           return (
@@ -63,6 +87,9 @@ export default function AroundMe() {
                 latitude: elem.location[1],
                 longitude: elem.location[0],
               }}
+              onPress={() =>
+                navigation.navigate("Room", { announceId: elem._id })
+              }
             />
           );
         })}
@@ -91,5 +118,12 @@ const styles = StyleSheet.create({
   mapView: {
     height: "100%",
     width: "100%",
+  },
+
+  animationContainer: {
+    backgroundColor: "#fff",
+    alignItems: "center",
+    justifyContent: "center",
+    flex: 1,
   },
 });

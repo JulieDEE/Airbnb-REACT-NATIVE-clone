@@ -133,7 +133,15 @@ export default function App() {
                           headerShown: false,
                         }}
                       >
-                        {() => <AroundMe />}
+                        {(props) => <AroundMe {...props} />}
+                      </Stack.Screen>
+                      <Stack.Screen
+                        name="Room"
+                        options={{
+                          headerShown: false,
+                        }}
+                      >
+                        {(props) => <RoomScreen {...props} />}
                       </Stack.Screen>
                     </Stack.Navigator>
                   )}
