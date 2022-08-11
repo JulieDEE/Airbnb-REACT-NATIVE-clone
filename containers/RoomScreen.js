@@ -4,7 +4,6 @@ import * as Location from "expo-location";
 import {
   Text,
   View,
-  FlatList,
   Image,
   ScrollView,
   StyleSheet,
@@ -83,85 +82,87 @@ export default function RoomScreen(props) {
   } else {
     return (
       <>
-        <View style={styles.header}>
-          <TouchableOpacity
-            style={{ width: "47%" }}
-            onPress={() => navigation.navigate("Home")}
-          >
-            <ArrowBack />
-          </TouchableOpacity>
-          <View style={{ width: "53%" }}>
-            <Image source={logo} style={styles.logo} />
-          </View>
-        </View>
-        <View>
-          <View
-            style={{
-              borderBottomColor: "#BBBBBB",
-              borderBottomWidth: 1,
-            }}
-          >
-            <View style={{ position: "relative" }}>
-              <Image
-                source={{ uri: data.photos[0].url }}
-                style={styles.mainImage}
-              />
-              <View style={styles.priceBackground}>
-                <Text style={styles.priceText}>{data.price} €</Text>
-              </View>
+        <ScrollView>
+          <View style={styles.header}>
+            <TouchableOpacity
+              style={{ width: "47%" }}
+              onPress={() => navigation.navigate("Home")}
+            >
+              <ArrowBack />
+            </TouchableOpacity>
+            <View style={{ width: "53%" }}>
+              <Image source={logo} style={styles.logo} />
             </View>
-
-            <View style={{ flexDirection: "row", padding: 10 }}>
-              <View style={{ width: "75%", justifyContent: "center" }}>
-                <Text numberOfLines={1} style={styles.title}>
-                  {data.title}
-                </Text>
-                <View
-                  style={{
-                    flexDirection: "row",
-                    alignItems: "center",
-                    marginTop: 10,
-                  }}
-                >
-                  <View style={{ flexDirection: "row" }}>
-                    {rating(data.ratingValue)}
-                  </View>
-
-                  <Text style={styles.review}>{data.reviews} reviews</Text>
+          </View>
+          <View>
+            <View
+              style={{
+                borderBottomColor: "#BBBBBB",
+                borderBottomWidth: 1,
+              }}
+            >
+              <View style={{ position: "relative" }}>
+                <Image
+                  source={{ uri: data.photos[0].url }}
+                  style={styles.mainImage}
+                />
+                <View style={styles.priceBackground}>
+                  <Text style={styles.priceText}>{data.price} €</Text>
                 </View>
               </View>
-              <Image
-                source={{ uri: data.user.account.photo.url }}
-                style={styles.imageUser}
-              />
+
+              <View style={{ flexDirection: "row", padding: 10 }}>
+                <View style={{ width: "75%", justifyContent: "center" }}>
+                  <Text numberOfLines={1} style={styles.title}>
+                    {data.title}
+                  </Text>
+                  <View
+                    style={{
+                      flexDirection: "row",
+                      alignItems: "center",
+                      marginTop: 10,
+                    }}
+                  >
+                    <View style={{ flexDirection: "row" }}>
+                      {rating(data.ratingValue)}
+                    </View>
+
+                    <Text style={styles.review}>{data.reviews} reviews</Text>
+                  </View>
+                </View>
+                <Image
+                  source={{ uri: data.user.account.photo.url }}
+                  style={styles.imageUser}
+                />
+              </View>
+              <Text
+                numberOfLines={3}
+                style={{ paddingHorizontal: 15, marginBottom: 15 }}
+              >
+                {data.description}
+              </Text>
             </View>
-            <Text
-              numberOfLines={3}
-              style={{ paddingHorizontal: 15, marginBottom: 15 }}
-            >
-              {data.description}
-            </Text>
           </View>
-        </View>
-        <View>
-          <MapView
-            showsUserLocation={true}
-            initialRegion={{
-              latitude: 48.856614,
-              longitude: 2.3522219,
-              latitudeDelta: 0.1,
-              longitudeDelta: 0.1,
-            }}
-            style={styles.mapview}
-          >
-            <MapView.Marker
-              coordinate={{
-                latitude: data.location[0],
-                longitude: data.location[1],
+          <View>
+            <MapView
+              showsUserLocation={true}
+              initialRegion={{
+                latitude: 48.856614,
+                longitude: 2.3522219,
+                latitudeDelta: 0.1,
+                longitudeDelta: 0.1,
               }}
-            />
-          </MapView>
-        </View>
+              style={styles.mapview}
+            >
+              <MapView.Marker
+                coordinate={{
+                  latitude: data.location[1],
+                  longitude: data.location[0],
+                }}
+              />
+            </MapView>
+          </View>
+        </ScrollView>
       </>
     );
   }
@@ -221,7 +222,7 @@ const styles = StyleSheet.create({
   },
 
   mapview: {
-    height: 200,
+    height: 300,
     width: "100%",
   },
 });

@@ -10,7 +10,9 @@ import SignInScreen from "./containers/SignInScreen";
 import SignUpScreen from "./containers/SignUpScreen";
 import SettingsScreen from "./containers/SettingsScreen";
 import SplashScreen from "./containers/SplashScreen";
-import RoomScreen from "./containers/RoomScreen"
+import RoomScreen from "./containers/RoomScreen";
+import AroundMe from "./containers/AroundMe";
+import { Entypo } from "@expo/vector-icons";
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -113,6 +115,30 @@ export default function App() {
                     </Stack.Navigator>
                   )}
                 </Tab.Screen>
+
+                <Tab.Screen
+                  name="TabAroundMe"
+                  options={{
+                    tabBarLabel: "Around me",
+                    tabBarIcon: ({ color, size }) => (
+                      <Entypo name="location-pin" size={24} color={color} />
+                    ),
+                  }}
+                >
+                  {() => (
+                    <Stack.Navigator>
+                      <Stack.Screen
+                        name="Around Me"
+                        options={{
+                          headerShown: false,
+                        }}
+                      >
+                        {() => <AroundMe />}
+                      </Stack.Screen>
+                    </Stack.Navigator>
+                  )}
+                </Tab.Screen>
+
                 <Tab.Screen
                   name="TabSettings"
                   options={{
