@@ -14,6 +14,7 @@ import { useState } from "react";
 import axios from "axios";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { Entypo } from "@expo/vector-icons";
+import { AntDesign } from "@expo/vector-icons";
 
 export default function SignUpScreen({ setToken }) {
   const navigation = useNavigation();
@@ -27,25 +28,29 @@ export default function SignUpScreen({ setToken }) {
   const [username, setUsername] = useState("");
   const [passwordVisible, setPasswordVisible] = useState(false);
   const [confirmpasswordVisible, setConfirmPasswordVisible] = useState(false);
+  const [passwordError, setPasswordError] = useState(false);
 
   // ON SUBMIT :
 
   const handleSubmit = async () => {
     try {
       if (email && password && confirmPassword && description && username) {
-        const response = await axios.post(
-          "https://express-airbnb-api.herokuapp.com/user/sign_up",
-          {
-            email,
-            username,
-            description,
-            password,
-          }
-        );
+        if (password === confirmPassword) {
+          const response = await axios.post(
+            "https://express-airbnb-api.herokuapp.com/user/sign_up",
+            {
+              email,
+              username,
+              description,
+              password,
+            }
+          );
 
-        const userToken = "secret-token";
-        setToken(userToken);
-        alert("Creation de compte reussie");
+          setToken(response.data.token);
+          alert("Creation de compte reussie");
+        } else {
+          setPasswordError(true);
+        }
       } else {
         alert("tous les champs ne sont pas remplis !");
       }
@@ -114,9 +119,9 @@ export default function SignUpScreen({ setToken }) {
             />
             <TouchableOpacity onPress={handleVisible} style={styles.eyeButton}>
               {passwordVisible ? (
-                <Entypo name="eye" size={24} color="black" />
+                <Entypo name="eye" size={24} color="#797979" />
               ) : (
-                <Entypo name="eye-with-line" size={24} color="black" />
+                <Entypo name="eye-with-line" size={24} color="#797979" />
               )}
             </TouchableOpacity>
           </View>
@@ -137,12 +142,21 @@ export default function SignUpScreen({ setToken }) {
               style={styles.eyeButton}
             >
               {confirmpasswordVisible ? (
-                <Entypo name="eye" size={24} color="black" />
+                <Entypo name="eye" size={24} color="#797979" />
               ) : (
-                <Entypo name="eye-with-line" size={24} color="black" />
+                <Entypo name="eye-with-line" size={24} color="#797979" />
               )}
             </TouchableOpacity>
           </View>
+          {passwordError && (
+            <View style={{ flexDirection: "row", marginTop: 10 }}>
+              <AntDesign name="exclamationcircle" size={20} color="red" />
+
+              <Text style={{ color: "red", marginLeft: 10 }}>
+                Different passwords
+              </Text>
+            </View>
+          )}
 
           <TouchableOpacity onPress={handleSubmit} style={styles.signUpButton}>
             <Text style={styles.buttonText}>Sign up</Text>

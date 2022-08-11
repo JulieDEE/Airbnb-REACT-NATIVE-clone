@@ -17,7 +17,7 @@ import { Entypo } from "@expo/vector-icons";
 
 export default function SignInScreen({ setToken }) {
   const navigation = useNavigation();
-  const [email, setEmail] = useState("");
+  const [email, setEmail] = useState("nono@airbnb-api.com");
   const [password, setPassword] = useState("");
   const [error, setError] = useState(false);
   const [passwordVisible, setPasswordVisible] = useState(false);
@@ -32,8 +32,10 @@ export default function SignInScreen({ setToken }) {
             password,
           }
         );
-        const userToken = "secret-token";
-        setToken(userToken);
+
+        // ASYNCSTORAGE TOKEN :
+        setToken(response.data.token);
+
         alert("connexion reussi");
       } else {
         alert("Tous les champs ne sont pas remplis");
@@ -61,6 +63,7 @@ export default function SignInScreen({ setToken }) {
           <TextInput
             style={styles.input}
             placeholder="email"
+            value={email}
             placeholderTextColor="#777777"
             onChangeText={(text) => {
               setEmail(text);
@@ -71,6 +74,7 @@ export default function SignInScreen({ setToken }) {
               style={styles.inputPassword}
               placeholder="password"
               placeholderTextColor="#777777"
+              value={password}
               secureTextEntry={passwordVisible ? false : true}
               onChangeText={(text) => {
                 setPassword(text);
@@ -78,9 +82,9 @@ export default function SignInScreen({ setToken }) {
             />
             <TouchableOpacity onPress={handleVisible} style={styles.eyeButton}>
               {passwordVisible ? (
-                <Entypo name="eye" size={24} color="black" />
+                <Entypo name="eye" size={24} color="#797979" />
               ) : (
-                <Entypo name="eye-with-line" size={24} color="black" />
+                <Entypo name="eye-with-line" size={24} color="#797979" />
               )}
             </TouchableOpacity>
           </View>
